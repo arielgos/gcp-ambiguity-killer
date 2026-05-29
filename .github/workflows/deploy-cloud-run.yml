@@ -1,0 +1,49 @@
+name: Deploy FastAPI to Cloud Run
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - gcp/**
+      - .github/workflows/deploy-cloud-run.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  CLOUD_RUN_SERVICE: ${{ vars.CLOUD_RUN_SERVICE || 'ambiguity-killer-api' }}
+  CLOUD_RUN_REGION: ${{ vars.CLOUD_RUN_REGION || 'us-central1' }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Set up gcloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Deploy to Cloud Run
+        id: deploy
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service: ${{ env.CLOUD_RUN_SERVICE }}
+          region: ${{ env.CLOUD_RUN_REGION }}
+          source: ./gcp
+          flags: --allow-unauthenticated
+
+      - name: Show service URL
+        run: |
+          echo "Deployed URL: ${{ steps.deploy.outputs.url }}"
