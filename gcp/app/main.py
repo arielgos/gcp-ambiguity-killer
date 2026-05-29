@@ -77,7 +77,7 @@ def process(payload: ProcessRequest) -> dict[str, str]:
     try:
         genai.configure(api_key=api_key)
         model = genai.GenerativeModel(
-            model_name=os.getenv("GEMINI_MODEL", "gemini-1.5-flash"),
+            model_name=os.getenv("GEMINI_MODEL", "gemini-2.5-flash"),
             system_instruction=system_prompt,
         )
 

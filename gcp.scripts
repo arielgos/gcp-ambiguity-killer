@@ -16,11 +16,7 @@ POOL_ID=github-pool
 
 gcloud iam workload-identity-pools create github-pool --project gcp-demos-497820 --location global --display-name "GitHub Pool"
 
-
 PROVIDER_ID=github-provider
-
-gcloud iam workload-identity-pools providers create-oidc github-provider --project gcp-demos-497820 --location global --workload-identity-pool github-pool --display-name "GitHub Provider" --issuer-uri https://token.actions.githubusercontent.com --attribute-mapping google.subject=assertion.sub,attribute.actor=assertion.actor,attribute.repository=assertion.repository
-
 
 gcloud iam workload-identity-pools providers create-oidc github-provider \
   --project gcp-demos-497820 \
@@ -36,7 +32,6 @@ gcloud iam service-accounts add-iam-policy-binding github-cloudrun-deployer@gcp-
 principalSet://iam.googleapis.com/projects/311746519106/locations/global/workloadIdentityPools/github-pool/attribute.repository/arielgos/gcp-ambiguity-killer
 
 projects/311746519106/locations/global/workloadIdentityPools/github-pool/providers/github-provider
-
 
 gcloud artifacts repositories create cloud-run-source-deploy \
   --repository-format=docker \
