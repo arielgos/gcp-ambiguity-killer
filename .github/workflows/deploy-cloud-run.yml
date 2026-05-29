@@ -41,7 +41,7 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           service: ${{ env.CLOUD_RUN_SERVICE }}
           region: ${{ env.CLOUD_RUN_REGION }}
-          source: ./
+          source: ./gcp
           flags: --allow-unauthenticated
 
       - name: Show service URL
