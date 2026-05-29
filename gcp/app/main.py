@@ -1,15 +1,53 @@
 import os
+import re
 
 from fastapi import FastAPI, HTTPException
 import google.generativeai as genai
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 
 app = FastAPI(title="GCP Ambiguity Killer", version="1.0.0", description="A service to help clarify GCP concepts and services.")
+
+
+_REMOTE_EXECUTION_PATTERNS = (
+    r"`",
+    r"\$\(",
+    r"\$\{",
+    r"&&",
+    r"\|\|",
+    r";",
+    r"\brm\s+-rf\b",
+    r"\bsudo\b",
+    r"\bchmod\b",
+    r"\bchown\b",
+    r"\bpython\s+-c\b",
+    r"\bnode\s+-e\b",
+    r"\beval\b",
+    r"\bexec\b",
+    r"\bos\.system\b",
+    r"\bsubprocess\b",
+)
 
 
 class ProcessRequest(BaseModel):
     user: str
     value: str
+
+    @field_validator("value")
+    @classmethod
+    def validate_value(cls, value: str) -> str:
+        normalized_value = value.strip()
+        if not normalized_value:
+            raise ValueError("value cannot be empty")
+
+        if len(normalized_value) > 2000:
+            raise ValueError("value is too long")
+
+        lowered_value = normalized_value.lower()
+        for pattern in _REMOTE_EXECUTION_PATTERNS:
+            if re.search(pattern, lowered_value):
+                raise ValueError("value contains disallowed command execution content")
+
+        return normalized_value
 
 
 @app.get("/health", tags=["health"])
