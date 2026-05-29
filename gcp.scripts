@@ -44,3 +44,7 @@ gcloud artifacts repositories create cloud-run-source-deploy \
   --description="Docker repository for Cloud Run source deployments"
 
 gcloud run deploy ambiguity-killer-api --source ./gcp --region us-central1 --allow-unauthenticated
+
+gcloud projects add-iam-policy-binding gcp-demos-497820 \
+  --member="serviceAccount:github-cloudrun-deployer@gcp-demos-497820.iam.gserviceaccount.com" \
+  --role="roles/storage.admin"
