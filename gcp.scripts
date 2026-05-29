@@ -33,8 +33,14 @@ gcloud iam workload-identity-pools providers create-oidc github-provider \
 
 gcloud iam service-accounts add-iam-policy-binding github-cloudrun-deployer@gcp-demos-497820.iam.gserviceaccount.com --project gcp-demos-497820 --role roles/iam.workloadIdentityUser --member "principalSet://iam.googleapis.com/projects/311746519106/locations/global/workloadIdentityPools/github-pool/attribute.repository/arielgos/gcp-ambiguity-killer"
 
-
 principalSet://iam.googleapis.com/projects/311746519106/locations/global/workloadIdentityPools/github-pool/attribute.repository/arielgos/gcp-ambiguity-killer
 
+projects/311746519106/locations/global/workloadIdentityPools/github-pool/providers/github-provider
 
-//iam.googleapis.com/projects/311746519106/locations/global/workloadIdentityPools/github-pool/providers/github-provider
+
+gcloud artifacts repositories create cloud-run-source-deploy \
+  --repository-format=docker \
+  --location=us-central1 \
+  --description="Docker repository for Cloud Run source deployments"
+
+gcloud run deploy ambiguity-killer-api --source ./gcp --region us-central1 --allow-unauthenticated
