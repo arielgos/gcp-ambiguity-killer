@@ -32,3 +32,9 @@ gcloud iam workload-identity-pools providers create-oidc github-provider \
   --attribute-condition="assertion.repository == 'arielgos/gcp-ambiguity-killer'"
 
 gcloud iam service-accounts add-iam-policy-binding github-cloudrun-deployer@gcp-demos-497820.iam.gserviceaccount.com --project gcp-demos-497820 --role roles/iam.workloadIdentityUser --member "principalSet://iam.googleapis.com/projects/311746519106/locations/global/workloadIdentityPools/github-pool/attribute.repository/arielgos/gcp-ambiguity-killer"
+
+
+principalSet://iam.googleapis.com/projects/311746519106/locations/global/workloadIdentityPools/github-pool/attribute.repository/arielgos/gcp-ambiguity-killer
+
+
+//iam.googleapis.com/projects/311746519106/locations/global/workloadIdentityPools/github-pool/providers/github-provider
