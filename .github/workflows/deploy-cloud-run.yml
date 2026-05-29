@@ -16,6 +16,7 @@ permissions:
 env:
   CLOUD_RUN_SERVICE: ${{ vars.CLOUD_RUN_SERVICE || 'ambiguity-killer-api' }}
   CLOUD_RUN_REGION: ${{ vars.CLOUD_RUN_REGION || 'us-central1' }}
+  GEMINI_MODEL: ${{ vars.GEMINI_MODEL || 'gemini-1.5-flash' }}
 
 jobs:
   deploy:
@@ -43,6 +44,9 @@ jobs:
           region: ${{ env.CLOUD_RUN_REGION }}
           source: ./gcp
           flags: --allow-unauthenticated
+          env_vars: |
+            GEMINI_MODEL=${{ env.GEMINI_MODEL }}
+            GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}
 
       - name: Show service URL
         run: |

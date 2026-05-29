@@ -10,6 +10,33 @@ This folder contains a minimal FastAPI app ready for Google Cloud Run deployment
 { "status": "ok" }
 ```
 
+- `POST /process` sends payload to Gemini and returns a JSON result.
+
+Example request:
+
+```bash
+curl -X POST http://localhost:8080/process \
+  -H "Content-Type: application/json" \
+  -d '{
+    "user": "agos",
+    "value": "Write a one-line summary of Cloud Run."
+  }'
+```
+
+Example response:
+
+```json
+{ "user": "agos", "result": "Cloud Run executes your containerized apps on demand without managing servers." }
+```
+
+Required environment variable:
+
+- `GEMINI_API_KEY`
+
+Optional environment variable:
+
+- `GEMINI_MODEL` (default: `gemini-1.5-flash`)
+
 ## Run locally
 
 ```bash
@@ -17,6 +44,7 @@ cd gcp
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
+export GEMINI_API_KEY="your_api_key"
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8080
 ```
 
@@ -30,6 +58,7 @@ curl http://localhost:8080/health
 
 ```bash
 cd gcp
+export GEMINI_API_KEY="your_api_key"
 docker compose up --build
 ```
 
@@ -50,6 +79,11 @@ View logs:
 ```bash
 docker compose logs -f api
 ```
+
+Note:
+
+- The `/process` endpoint uses internal system and user instructions defined in `app/main.py`.
+- Send only `user` and `value` in the request body.
 
 ## Deploy with GitHub Actions
 
