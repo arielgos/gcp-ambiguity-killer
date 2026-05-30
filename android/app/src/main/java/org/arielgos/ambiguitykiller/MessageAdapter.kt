@@ -6,12 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import io.noties.markwon.Markwon
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.Date
 import java.util.Locale
 
 class MessageAdapter(context: Context, messages: MutableList<Message>) : ArrayAdapter<Message?>(context, 0, messages) {
+
+    private val markwon = Markwon.create(context)
+
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val message: Message? = getItem(position)
         var convertView = LayoutInflater.from(context).inflate(R.layout.message_item, parent, false)
@@ -20,8 +24,12 @@ class MessageAdapter(context: Context, messages: MutableList<Message>) : ArrayAd
         }
         val tvMessage = convertView.findViewById<TextView>(R.id.message)
         val tvDate = convertView.findViewById<TextView>(R.id.date)
-        tvMessage.text = message?.message
-        tvDate.text = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.US).format(Date.from(Instant.now()))
+
+        message?.message?.let {
+            markwon.setMarkdown(tvMessage, it)
+        }
+
+        tvDate.text = SimpleDateFormat("HH:mm", Locale.US).format(Date.from(Instant.now()))
         return convertView
     }
 }
