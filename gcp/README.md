@@ -98,6 +98,26 @@ For local development, you can use docker-compose:
 docker-compose up
 ```
 
+## GCP Setup Script
+
+For automating the GCP setup process, you can use the provided `setup.sh` script:
+
+```bash
+# Make it executable
+chmod +x setup.sh
+
+# Run the setup
+./setup.sh
+```
+
+This script will:
+1. Enable required GCP services
+2. Create a service account for deployment
+3. Set up IAM policies and permissions
+4. Create workload identity pools and providers
+5. Create an Artifact Registry repository
+6. Deploy the service to Cloud Run
+
 Test endpoint:
 
 ```bash
@@ -130,7 +150,7 @@ View logs:
 docker compose logs -f api
 ```
 
-Note:
+## Note
 
 - The `/process` endpoint uses internal system and user instructions defined in `app/main.py`.
 - Send only `user` and `value` in the request body.
@@ -146,7 +166,7 @@ Deploy triggers:
 
 Required GitHub repository secrets:
 
-- `GCP_PROJECT_ID`
+- `GEMINI_API_KEY`
 - `GCP_WORKLOAD_IDENTITY_PROVIDER`
 - `GCP_SERVICE_ACCOUNT`
 
