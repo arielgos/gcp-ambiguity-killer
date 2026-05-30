@@ -2,4 +2,6 @@
     <string name="app_name">ambiguity-killer</string>
     <string name="send">Send</string>
     <string name="record">Record</string>
+    <string name="type_a_message">Type a message...</string>
+    <string name="cloud_run">Cloud Run</string>
 </resources>

@@ -17,7 +17,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.launch
 import org.arielgos.ambiguitykiller.audio.MLKitSpeechManager
 import org.arielgos.ambiguitykiller.audio.VoiceRecorder
@@ -29,9 +31,9 @@ class MainActivity : AppCompatActivity() {
     private val messages: MutableList<Message> = mutableListOf()
 
     private var list: ListView? = null
-    private var txtMessage: EditText? = null
+    private var txtMessage: TextInputEditText? = null
     private var btnRecord: FloatingActionButton? = null
-    private var btnSend: Button? = null
+    private var btnSend: MaterialButton? = null
 
     private lateinit var voiceRecorder: VoiceRecorder
     private lateinit var mlKitSpeechManager: MLKitSpeechManager
