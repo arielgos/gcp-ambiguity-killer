@@ -6,8 +6,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
 import android.widget.ListView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -34,6 +32,7 @@ class MainActivity : AppCompatActivity() {
     private var txtMessage: TextInputEditText? = null
     private var btnRecord: FloatingActionButton? = null
     private var btnSend: MaterialButton? = null
+    private var recordingIndicator: View? = null
 
     private lateinit var voiceRecorder: VoiceRecorder
     private lateinit var mlKitSpeechManager: MLKitSpeechManager
@@ -52,11 +51,12 @@ class MainActivity : AppCompatActivity() {
 
         val adapter = MessageAdapter(this@MainActivity, messages)
         list = findViewById(R.id.list)
-        list?.setAdapter(adapter)
+        list?.adapter = adapter
 
         txtMessage = findViewById(R.id.message)
         btnRecord = findViewById(R.id.record)
         btnSend = findViewById(R.id.send)
+        recordingIndicator = findViewById(R.id.recording_indicator)
 
         voiceRecorder = VoiceRecorder(this)
         mlKitSpeechManager = MLKitSpeechManager(this)
@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity() {
                     if (checkPermission()) {
                         txtMessage?.setText("")
                         voiceRecorder.startRecording()
-                        Toast.makeText(this, "Recording...", Toast.LENGTH_SHORT).show()
+                        recordingIndicator?.visibility = View.VISIBLE
                     } else {
                         requestPermission()
                     }
@@ -78,6 +78,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    recordingIndicator?.visibility = View.GONE
                     val audioFile = voiceRecorder.stopRecording()
                     if (audioFile != null) {
                         Toast.makeText(this, "Transcribing...", Toast.LENGTH_SHORT).show()
