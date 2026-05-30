@@ -21,6 +21,7 @@ class MLKitSpeechManager(private val context: Context) {
     private val speechRecognizer = SpeechRecognition.getClient(
         SpeechRecognizerOptions.builder().apply {
             locale = Locale.US
+            preferredMode = SpeechRecognizerOptions.Mode.MODE_ADVANCED
         }.build()
     )
 
