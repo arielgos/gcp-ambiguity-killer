@@ -48,6 +48,7 @@ class MLKitSpeechManager(private val context: Context) {
                     when (response) {
                         is SpeechRecognizerResponse.PartialTextResponse -> {
                             Log.d("MLKitSpeechManager", "Partial: ${response.text}")
+                            onResult(response.text)
                         }
 
                         is SpeechRecognizerResponse.FinalTextResponse -> {

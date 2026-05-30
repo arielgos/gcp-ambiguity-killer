@@ -60,6 +60,17 @@ class VoiceRecorder(private val context: Context) {
                     os.write(data, 0, read)
                 }
             }
+
+            // Read remaining data after isRecording is set to false
+            var readRemaining: Int = 0
+            do {
+                readRemaining = audioRecord?.read(data, 0, minBufferSize) ?: 0
+                if (readRemaining > 0) {
+                    os.write(data, 0, readRemaining)
+                }
+            } while (readRemaining > 0)
+
+            os.flush()
         } catch (e: IOException) {
             Log.e("VoiceRecorder", "Error writing audio data", e)
         } finally {
@@ -141,19 +152,25 @@ class VoiceRecorder(private val context: Context) {
         if (!isRecording.get()) return null
 
         isRecording.set(false)
+
+        audioRecord?.apply {
+            if (state == AudioRecord.STATE_INITIALIZED) {
+                try {
+                    stop()
+                } catch (e: Exception) {
+                    Log.e("VoiceRecorder", "Error stopping AudioRecord", e)
+                }
+            }
+        }
+
         try {
-            recordingThread?.join()
+            recordingThread?.join(1000) // Wait up to 1s for thread to finish
         } catch (e: InterruptedException) {
             e.printStackTrace()
         }
         recordingThread = null
 
-        audioRecord?.apply {
-            if (state == AudioRecord.STATE_INITIALIZED) {
-                stop()
-            }
-            release()
-        }
+        audioRecord?.release()
         audioRecord = null
 
         Log.d("VoiceRecorder", "Recording stopped: ${audioFile?.absolutePath}")
